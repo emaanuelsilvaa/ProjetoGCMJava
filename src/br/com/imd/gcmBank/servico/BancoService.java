@@ -23,8 +23,16 @@ public class BancoService {
 		return true;
 		
 	}
-	public void verificarSaldo( int numeroConta) {
+	public double verificarSaldo( int numeroConta) {
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				return conta2.getSaldo();
+			}
+		}
+		return Double.MAX_VALUE;
 	}
 	
 	public boolean creditar(int numeroConta, double valor) {
