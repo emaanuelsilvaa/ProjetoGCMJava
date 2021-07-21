@@ -27,8 +27,18 @@ public class BancoService {
 		
 	}
 	
-	public void creditar( int numeroConta, double valor) {
+	public boolean creditar(int numeroConta, double valor) {
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				conta2.setSaldo(conta2.getSaldo() + valor);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void debitar(int numero, double valor) {
