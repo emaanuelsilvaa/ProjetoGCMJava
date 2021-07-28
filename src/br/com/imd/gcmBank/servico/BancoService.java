@@ -57,7 +57,7 @@ public class BancoService {
 	
 	public void transferir(int numeroContaOrigem, int numeroContaDestino, double valor) {
 		
-		if(validarNumedoDaConta(numeroContaDestino) && validarNumedoDaConta(numeroContaOrigem) )  {
+		if(!validarNumedoDaConta(numeroContaDestino) && !validarNumedoDaConta(numeroContaOrigem) )  {
 			double saldoOrigem = BancoDAO.get(numeroContaOrigem).getSaldo();
 			BancoDAO.get(numeroContaOrigem).setSaldo(saldoOrigem - valor);
 			double saldoDestino = BancoDAO.get(numeroContaDestino).getSaldo();
