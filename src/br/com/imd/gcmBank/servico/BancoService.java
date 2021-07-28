@@ -44,7 +44,15 @@ public class BancoService {
 		return false;
 	}
 	
-	public void debitar(int numero, double valor) {
+	public void debitar(int numeroConta, double valor) {
+		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
+		for (Iterator iterator = conta.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				double saldoAtual = BancoDAO.get(numeroConta).getSaldo();
+				BancoDAO.get(numeroConta).setSaldo(saldoAtual - valor );
+			}
+		}
 	}
 	
 	public void transferir(int numeroContaOrigen, int numeroContaDestino, double valor) {
