@@ -55,7 +55,16 @@ public class BancoService {
 		}
 	}
 	
-	public void transferir(int numeroContaOrigen, int numeroContaDestino, double valor) {
+	public void transferir(int numeroContaOrigem, int numeroContaDestino, double valor) {
+		
+		if(validarNumedoDaConta(numeroContaDestino) && validarNumedoDaConta(numeroContaOrigem) )  {
+			double saldoOrigem = BancoDAO.get(numeroContaOrigem).getSaldo();
+			BancoDAO.get(numeroContaOrigem).setSaldo(saldoOrigem - valor);
+			double saldoDestino = BancoDAO.get(numeroContaDestino).getSaldo();
+			BancoDAO.get(numeroContaDestino).setSaldo(saldoDestino + valor);
+		}
+		else
+			System.out.println("numero de conta invalida");
 		
 	}
 	
