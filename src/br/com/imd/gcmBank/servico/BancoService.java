@@ -11,31 +11,75 @@ public class BancoService {
 	
 	
 	public boolean inserirConta(int numeroConta) {
-		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
+		if(validarNumedoDaConta(numeroConta)) {
+			criarConta(numeroConta);
+			return true;
+		}
+		return false;
+	}
+	
+	public double verificarSaldo( int numeroConta) {
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				return conta2.getSaldo();
+			}
+		}
+		return Double.MAX_VALUE;
+	}
+	
+	public boolean creditar(int numeroConta, double valor) {
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
+		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				conta2.setSaldo(conta2.getSaldo() + valor);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void debitar(int numeroConta, double valor) {
+		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
 		for (Iterator iterator = conta.iterator(); iterator.hasNext();) {
 			Conta conta2 = (Conta) iterator.next();
 			if(conta2.getNumero() == numeroConta){
+				double saldoAtual = BancoDAO.get(numeroConta).getSaldo();
+				BancoDAO.get(numeroConta).setSaldo(saldoAtual - valor );
 			}
-			
 		}
+	}
+	
+	public void transferir(int numeroContaOrigem, int numeroContaDestino, double valor) {
 		
+		if(!validarNumedoDaConta(numeroContaDestino) && !validarNumedoDaConta(numeroContaOrigem) )  {
+			double saldoOrigem = BancoDAO.get(numeroContaOrigem).getSaldo();
+			BancoDAO.get(numeroContaOrigem).setSaldo(saldoOrigem - valor);
+			double saldoDestino = BancoDAO.get(numeroContaDestino).getSaldo();
+			BancoDAO.get(numeroContaDestino).setSaldo(saldoDestino + valor);
+		}
+		else
+			System.out.println("numero de conta invalida");
+		
+	}
+	
+	public boolean validarNumedoDaConta(int numeroConta) {
+		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
+		for (Iterator iterator = conta.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				return false;
+			}
+		}
 		return true;
-		
 	}
-	public void verificarSaldo( int numeroConta) {
-		
-	}
-	
-	public void creditar( int numeroConta, double valor) {
-		
-	}
-	
-	public void debitar(int numero, double valor) {
-	}
-	
-	public void transferir(int numeroContaOrigen, int numeroContaDestino, double valor) {
-		
+	private void criarConta(int numeroConta) {
+		BancoDAO.insert(new Conta(numeroConta));
 	}
 	
 }
