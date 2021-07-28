@@ -11,18 +11,13 @@ public class BancoService {
 	
 	
 	public boolean inserirConta(int numeroConta) {
-		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
-		
-		for (Iterator iterator = conta.iterator(); iterator.hasNext();) {
-			Conta conta2 = (Conta) iterator.next();
-			if(conta2.getNumero() == numeroConta){
-			}
-			
+		if(validarNumedoDaConta(numeroConta)) {
+			criarConta(numeroConta);
+			return true;
 		}
-		
-		return true;
-		
+		return false;
 	}
+	
 	public double verificarSaldo( int numeroConta) {
 		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 		
@@ -54,6 +49,20 @@ public class BancoService {
 	
 	public void transferir(int numeroContaOrigen, int numeroContaDestino, double valor) {
 		
+	}
+	
+	public boolean validarNumedoDaConta(int numeroConta) {
+		ArrayList<Conta> conta =  (ArrayList<Conta>) BancoDAO.findAll();
+		for (Iterator iterator = conta.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				return false;
+			}
+		}
+		return true;
+	}
+	private void criarConta(int numeroConta) {
+		BancoDAO.insert(new Conta(numeroConta));
 	}
 	
 }
