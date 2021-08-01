@@ -10,13 +10,35 @@ import br.com.imd.gcmBank.modelo.ContaBonus;
 public class ContaBonusService {
 	
 	
+	
+	public boolean isContaBonus(int numeroConta) {
+		
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
+		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				if(conta2 instanceof ContaBonus) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
 	public double verificarSaldo( int numeroConta) {
 		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 		
 		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
-			ContaBonus conta2 = (ContaBonus) iterator.next();
+			Conta conta2 = (Conta) iterator.next();
 			if(conta2.getNumero() == numeroConta){
-				return conta2.getSaldo();
+				if(conta2 instanceof ContaBonus) {
+					return conta2.getSaldo();
+				}
 			}
 		}
 		return Double.MAX_VALUE;
