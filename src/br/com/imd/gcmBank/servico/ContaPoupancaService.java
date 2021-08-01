@@ -97,5 +97,21 @@ public class ContaPoupancaService {
 		BancoDAO.insert(new ContaPoupanca(numeroConta));
 	}
 
-
+public boolean isContaPoupanca(int numeroConta) {
+		
+		ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
+		
+		for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
+			Conta conta2 = (Conta) iterator.next();
+			if(conta2.getNumero() == numeroConta){
+				if(conta2 instanceof ContaPoupanca) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+		return false;
+	}
 }
