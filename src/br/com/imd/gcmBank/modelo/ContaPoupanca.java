@@ -7,10 +7,15 @@ public class ContaPoupanca extends Conta {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public void renderJuros(double taxaPercentual) {
+	public double RendimentoPoupanca(double taxaPercentual) {
 		double valorAtual = getSaldo();
-		double valorSobreTaxa = valorAtual * (taxaPercentual/100);
-		setSaldo(valorSobreTaxa);
+		double rendimento = valorAtual * (taxaPercentual/100);
+		return rendimento;
 	}
-
+	
+	public void ValorTotalComRendimento(double taxaPercentual) {
+		double saldoAtual = getSaldo();
+		double valorTotal = saldoAtual + RendimentoPoupanca(taxaPercentual);
+		setSaldo(valorTotal);
+	}
 }
