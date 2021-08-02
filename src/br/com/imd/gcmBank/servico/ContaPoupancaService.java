@@ -17,7 +17,7 @@ public class ContaPoupancaService {
 			for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
 				ContaPoupanca conta2 = (ContaPoupanca) iterator.next();
 				if(conta2.getNumero() == numeroConta){
-					conta2.renderJuros(taxa);
+					conta2.RendimentoPoupanca(taxa);
 					return conta2.getSaldo();
 				}
 			}
