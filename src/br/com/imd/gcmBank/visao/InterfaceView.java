@@ -113,7 +113,7 @@ public class InterfaceView {
 		 }
 	 }
 	 
-	 public static void opcaoDebitar(BancoService b) {
+	 public static void opcaoDebitar(BancoService b, ContaBonusService cb, ContaPoupancaService cp) {
 		 int numeroConta = -1;
 		 double valorDebitado = 0.0;
 		 Scanner scanDebito = new Scanner(System.in);
@@ -125,11 +125,16 @@ public class InterfaceView {
 			 System.out.println("Informe o valor debitado ou 0 para voltar");
 			 valorDebitado = scanDebito.nextDouble();
 			 if(valorDebitado > 0.0) {
+				 if((b.verificarSaldo(numeroConta) - valorDebitado) < -1000.0) {
+					 System.out.println("Operação NÃO REALIZADA: Saldo Indisponível");
+				 }
+				 else {
 				 b.debitar(numeroConta, valorDebitado);
 				 System.out.println("OperaÃ§Ã£o realizada com Sucesso");
 				 System.out.println("Conta: " + numeroConta);
 				 System.out.println("Valor debitado: " + valorDebitado);
-				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); 
+				 }
 			 }
 		 }
 		 else {
@@ -152,7 +157,10 @@ public class InterfaceView {
 			if(contaDestino > 0 && !b.validarNumedoDaConta(contaDestino)) { //adicionar validaÃ§Ã£o de conta existente
 				System.out.println("Informe o valor a ser transferido");
 				valorTransferencia = scanTransf.nextDouble();
-				if(valorTransferencia > 0.0) {
+				if((b.verificarSaldo(contaOrigem) - valorTransferencia) < -1000.0) {
+					System.out.println("Operação Não Realizada: Saldo indisponível na conta origem: " + contaOrigem);
+				}
+				else {
 					b.transferir(contaOrigem, contaDestino, valorTransferencia);
 					System.out.println("Transferencia Realizada: ");
 					System.out.println("Conta Origem: " + contaOrigem);
