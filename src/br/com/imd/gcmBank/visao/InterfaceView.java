@@ -4,7 +4,9 @@ import java.util.Scanner;
 
 import br.com.imd.gcmBank.dados.BancoDAO;
 import br.com.imd.gcmBank.modelo.Conta;
+import br.com.imd.gcmBank.modelo.ContaPoupanca;
 import br.com.imd.gcmBank.servico.BancoService;
+import br.com.imd.gcmBank.servico.ContaPoupancaService;
 
 public class InterfaceView {
 	 public static void exibeMenu(){
@@ -15,21 +17,35 @@ public class InterfaceView {
 	        System.out.println("3 - Creditar");
 	        System.out.println("4 - Debitar");
 	        System.out.println("5 - Transferência");
-	        System.out.println("6 - Para Sair");
+	        System.out.println("6 - Render Juros");
+	        System.out.println("0 - Para Sair");
 	        System.out.println("Digite o código de uma operação para prosseguir");
 	    }
-	 public static void opcaoNovaConta(BancoService b) {
+	 public static void opcaoNovaConta(BancoService b, ContaPoupancaService cp) {
 		int numeroConta = -1;
+		int tipoConta = -1;
 		System.out.println("---GCM-BANK---");
 		System.out.println("Criar Conta");
-     	System.out.println("Informe o numero da conta ou 0 para voltar");
+     	System.out.println("Informe o tipo da conta ou 0 para voltar");
+     	System.out.println("1- Conta Simples");
+     	System.out.println("3- Conta Poupanca");
      	Scanner scanConta = new Scanner(System.in);
+     	tipoConta = scanConta.nextInt();
+     	if(tipoConta < 1) {
+     		System.out.println("Retornando");
+     		return;
+     	}
+     	System.out.println("Informe o numero da conta ou 0 para voltar");
      	numeroConta = scanConta.nextInt();
      	if(numeroConta != 0 && b.validarNumedoDaConta(numeroConta)) {
-     		//Inserir as validações de existencia de conta aqui
+     		if(tipoConta == 1) {
      		b.inserirConta(numeroConta);
      		System.out.println("Conta " + numeroConta + " criada com sucesso");
-     		
+     		}
+     		if(tipoConta == 3) {
+     			cp.inserirConta(numeroConta);
+     			System.out.println("Conta poupanca" + numeroConta + " criada com sucesso");
+     		}
      		//System.out.println("Já existe conta com esse numero, informe outro numero");
      	}
      	else{
@@ -53,7 +69,7 @@ public class InterfaceView {
 	     		System.out.println("Conta insexistente");
 	     	}
 	 }
-	 public static void opcaoCreditar(BancoService b) {
+	 public static void opcaoCreditar(BancoService b, ContaPoupancaService cp) {
 		 int numeroConta = -1;
 		 double valorCreditado = 0.0;
 		 System.out.println("---GCM-BANK---");
@@ -65,11 +81,20 @@ public class InterfaceView {
 			 System.out.println("Informe o valor a ser creditado");
 			 valorCreditado = scanCredito.nextDouble();
 			 if(valorCreditado > 0.0) {
-				 b.creditar(numeroConta, valorCreditado);
-				 System.out.println("Operação realizada com Sucesso");
-				 System.out.println("Conta: " + numeroConta);
-				 System.out.println("Valor creditado: " + valorCreditado);
-				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+				 if(cp.isContaPoupanca(numeroConta)) {
+					 cp.creditar(numeroConta, valorCreditado);
+					 System.out.println("Operação realizada com Sucesso");
+					 System.out.println("Conta: " + numeroConta);
+					 System.out.println("Valor creditado: " + valorCreditado);
+					 System.out.println("Novo Saldo: " + cp.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+				 }
+				 else {
+					 b.creditar(numeroConta, valorCreditado);
+					 System.out.println("Operação realizada com Sucesso");
+					 System.out.println("Conta: " + numeroConta);
+					 System.out.println("Valor creditado: " + valorCreditado);
+					 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+				 }
 			 }
 		 }
 		 else {
@@ -133,29 +158,64 @@ public class InterfaceView {
 			System.out.println("Operação cancelada");
 		}
 	 }
+	 
+	 public static void opcaoRenderJuros(BancoService b, ContaPoupancaService cp) {
+		 int numeroConta = -1;
+		 double valorRendimento = 0;
+		System.out.println("---GCM-BANK---");
+		System.out.println("Rendimento de Juros para Poupança");
+		System.out.println("Informe o numero da conta POUPANCA ou 0 para encerrar a operação");
+		Scanner scanJuros = new Scanner(System.in);
+		numeroConta = scanJuros.nextInt();
+		if(numeroConta > 0) {
+			if(!cp.validarNumedoDaConta(numeroConta) && cp.isContaPoupanca(numeroConta)) {
+				System.out.println("Informe o percentual de juros a serem aplicados ou 0 para voltar");
+				valorRendimento = scanJuros.nextDouble();
+				if(valorRendimento > 0.0) {
+					double saldoAnterior = cp.verificarSaldo(numeroConta);
+					double novoSaldo = cp.obterRendimentoDeJuros(numeroConta, valorRendimento);
+					System.out.println("Operação realizada com sucesso");
+					System.out.println("Saldo Anterior: RS " + saldoAnterior);
+					System.out.println("Novo Saldo: RS " + novoSaldo);
+				}
+				else {
+					System.out.println("Retornando");
+					return;
+				}
+			}
+			else {
+				System.out.println("Conta invalida");
+			}
+		}
+		 
+	 }
 	    public static void main(String[] args) {
 	    	BancoService b = new BancoService();
-	        int menuOpcao = 0;
+	    	ContaPoupancaService cp = new ContaPoupancaService();
+	        int menuOpcao = -1;
 	        Scanner scanIn = new Scanner(System.in);
-	        while(menuOpcao != 6){
-	            menuOpcao = 0;
+	        while(menuOpcao != 0){
+	            menuOpcao = -1;
 	            exibeMenu();
 	            menuOpcao = scanIn.nextInt();
 	            
 	            if(menuOpcao == 1) {
-	            	opcaoNovaConta(b);
+	            	opcaoNovaConta(b, cp);
 	            }
 	            if(menuOpcao == 2) {
 	            	opcaoSaldo(b);
 	            }
 	            if(menuOpcao == 3) {
-	            	opcaoCreditar(b);
+	            	opcaoCreditar(b, cp);
 	            }
 	            if(menuOpcao == 4) {
 	            	opcaoDebitar(b);
 	            }
 	            if(menuOpcao == 5) {
 	            	opcaoTransferencia(b);
+	            }
+	            if(menuOpcao == 6) {
+	            	opcaoRenderJuros(b, cp);
 	            }
 	        }
 	        scanIn.close();

@@ -11,13 +11,13 @@ public class ContaPoupancaService {
 	
 	
 	public double obterRendimentoDeJuros(int numeroConta, double taxa) {
-		if(validarNumedoDaConta(numeroConta)) {
+		if(!validarNumedoDaConta(numeroConta)) {
 			ArrayList<Conta> contas =  (ArrayList<Conta>) BancoDAO.findAll();
 			
 			for (Iterator iterator = contas.iterator(); iterator.hasNext();) {
 				ContaPoupanca conta2 = (ContaPoupanca) iterator.next();
 				if(conta2.getNumero() == numeroConta){
-					conta2.RendimentoPoupanca(taxa);
+					conta2.ValorTotalComRendimento(taxa);
 					return conta2.getSaldo();
 				}
 			}
