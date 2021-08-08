@@ -5,6 +5,7 @@ import java.util.Scanner;
 import br.com.imd.gcmBank.dados.BancoDAO;
 import br.com.imd.gcmBank.modelo.Conta;
 import br.com.imd.gcmBank.servico.BancoService;
+import br.com.imd.gcmBank.servico.ContaBonusService;
 
 public class InterfaceView {
 	 public static void exibeMenu(){
@@ -18,18 +19,32 @@ public class InterfaceView {
 	        System.out.println("6 - Para Sair");
 	        System.out.println("Digite o código de uma operação para prosseguir");
 	    }
-	 public static void opcaoNovaConta(BancoService b) {
+	 public static void opcaoNovaConta(BancoService b, ContaBonusService cb) {
 		int numeroConta = -1;
+		int tipoConta = -1;
 		System.out.println("---GCM-BANK---");
 		System.out.println("Criar Conta");
-     	System.out.println("Informe o numero da conta ou 0 para voltar");
+     	System.out.println("Informe o tipo da conta ou 0 para voltar");
+      	System.out.println("1- Conta Simples");
+      	System.out.println("2- Conta Bonus");
      	Scanner scanConta = new Scanner(System.in);
+     	tipoConta = scanConta.nextInt();
+     	if(tipoConta < 0) {
+     		System.out.println("Retornando");
+     		return;
+     	}
+      	System.out.println("Informe o numero da conta ou 0 para voltar");
      	numeroConta = scanConta.nextInt();
-     	if(numeroConta != 0 && b.validarNumedoDaConta(numeroConta)) {
+     	if(numeroConta > 0 && b.validarNumedoDaConta(numeroConta)) {
      		//Inserir as validações de existencia de conta aqui
-     		b.inserirConta(numeroConta);
-     		System.out.println("Conta " + numeroConta + " criada com sucesso");
-     		
+     		if(tipoConta == 2) {
+     			cb.inserirConta(numeroConta);
+     			System.out.println("Conta bonus " + numeroConta + " criada com sucesso");
+     		}
+     		else if(tipoConta == 1){
+     			b.inserirConta(numeroConta);
+     			System.out.println("Conta " + numeroConta + " criada com sucesso");
+     		}
      		//System.out.println("Já existe conta com esse numero, informe outro numero");
      	}
      	else{
@@ -53,7 +68,7 @@ public class InterfaceView {
 	     		System.out.println("Conta insexistente");
 	     	}
 	 }
-	 public static void opcaoCreditar(BancoService b) {
+	 public static void opcaoCreditar(BancoService b, ContaBonusService cb) {
 		 int numeroConta = -1;
 		 double valorCreditado = 0.0;
 		 System.out.println("---GCM-BANK---");
@@ -64,12 +79,19 @@ public class InterfaceView {
 		 if(numeroConta > 0 && !b.validarNumedoDaConta(numeroConta)) { //Adicionar operação de conta existente
 			 System.out.println("Informe o valor a ser creditado");
 			 valorCreditado = scanCredito.nextDouble();
-			 if(valorCreditado > 0.0) {
+			 if(valorCreditado > 0.0 && !cb.isContaBonus(numeroConta)) {
 				 b.creditar(numeroConta, valorCreditado);
 				 System.out.println("Operação realizada com Sucesso");
 				 System.out.println("Conta: " + numeroConta);
 				 System.out.println("Valor creditado: " + valorCreditado);
 				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+			 }
+			 else {
+				 cb.creditar(numeroConta, valorCreditado);
+				 System.out.println("Operação realizada com Sucesso");
+				 System.out.println("Conta: " + numeroConta);
+				 System.out.println("Valor creditado: " + valorCreditado);
+				 System.out.println("Novo Saldo: " + cb.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto
 			 }
 		 }
 		 else {
@@ -135,6 +157,7 @@ public class InterfaceView {
 	 }
 	    public static void main(String[] args) {
 	    	BancoService b = new BancoService();
+	    	ContaBonusService cb = new ContaBonusService();
 	        int menuOpcao = 0;
 	        Scanner scanIn = new Scanner(System.in);
 	        while(menuOpcao != 6){
@@ -143,13 +166,13 @@ public class InterfaceView {
 	            menuOpcao = scanIn.nextInt();
 	            
 	            if(menuOpcao == 1) {
-	            	opcaoNovaConta(b);
+	            	opcaoNovaConta(b, cb);
 	            }
 	            if(menuOpcao == 2) {
 	            	opcaoSaldo(b);
 	            }
 	            if(menuOpcao == 3) {
-	            	opcaoCreditar(b);
+	            	opcaoCreditar(b, cb);
 	            }
 	            if(menuOpcao == 4) {
 	            	opcaoDebitar(b);
