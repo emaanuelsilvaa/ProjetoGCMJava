@@ -2,8 +2,11 @@ package br.com.imd.gcmBank.modelo;
 
 public class ContaPoupanca extends Conta {
 	
-	public ContaPoupanca(int numero) {
+	private double saldoInicial = 0;
+	
+	public ContaPoupanca(int numero, double saldoInicial) {
 		super(numero);
+		this.saldoInicial = saldoInicial;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -17,5 +20,13 @@ public class ContaPoupanca extends Conta {
 		double saldoAtual = getSaldo();
 		double valorTotal = saldoAtual + RendimentoPoupanca(taxaPercentual);
 		setSaldo(valorTotal);
+	}
+	
+	public double GetSaldoInicial() {
+		return saldoInicial;
+	}
+	
+	public void SetSaldoInicial(double saldoInicial) {
+		this.saldoInicial = saldoInicial;
 	}
 }

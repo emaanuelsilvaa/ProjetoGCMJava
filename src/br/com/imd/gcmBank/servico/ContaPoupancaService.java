@@ -25,9 +25,9 @@ public class ContaPoupancaService {
 		return Double.MAX_VALUE;
 		
 	}
-	public boolean inserirConta(int numeroConta) {
+	public boolean inserirConta(int numeroConta, double saldoInicial) {
 		if(validarNumedoDaConta(numeroConta)) {
-			criarConta(numeroConta);
+			criarConta(numeroConta, saldoInicial);
 			return true;
 		}
 		return false;
@@ -93,8 +93,8 @@ public class ContaPoupancaService {
 		}
 		return true;
 	}
-	private void criarConta(int numeroConta) {
-		BancoDAO.insert(new ContaPoupanca(numeroConta));
+	private void criarConta(int numeroConta, double saldoInicial) {
+		BancoDAO.insert(new ContaPoupanca(numeroConta, saldoInicial));
 	}
 
 public boolean isContaPoupanca(int numeroConta) {
