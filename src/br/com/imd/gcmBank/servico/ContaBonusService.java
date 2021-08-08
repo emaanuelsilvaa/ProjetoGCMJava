@@ -75,9 +75,9 @@ public class ContaBonusService {
 	public void transferir(int numeroContaOrigem, int numeroContaDestino, double valor) {
 		
 		if(!validarNumedoDaConta(numeroContaDestino) && !validarNumedoDaConta(numeroContaOrigem) )  {
-			if(valor > 200) {
+			if(valor > 150) {
 				ContaBonus conta2 = (ContaBonus) BancoDAO.get(numeroContaDestino);
-				int pontosGanhos = (int) (valor/200);
+				int pontosGanhos = (int) (valor/150);
 				int pontuacaoAtual = conta2.getPontuacao();
 				((ContaBonus) BancoDAO.get(numeroContaDestino)).setPontuacao(pontuacaoAtual + pontosGanhos);
 			}	
