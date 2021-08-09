@@ -31,7 +31,7 @@ public class InterfaceView {
 		System.out.println("Criar Conta");
      	System.out.println("Informe o tipo da conta ou 0 para voltar");
      	System.out.println("1- Conta Simples");
-      System.out.println("2- Conta Bonus");
+     	System.out.println("2- Conta Bonus");
      	System.out.println("3- Conta Poupanca");
      	Scanner scanConta = new Scanner(System.in);
      	tipoConta = scanConta.nextInt();
@@ -51,9 +51,16 @@ public class InterfaceView {
      			System.out.println("Conta bonus " + numeroConta + " criada com sucesso");
      		}
      		if(tipoConta == 3) {
-     			cp.inserirConta(numeroConta);
-     			System.out.println("Conta poupanca" + numeroConta + " criada com sucesso");
-
+     			double saldoInicial = -1;
+     			System.out.println("Informe o saldo inicial da sua Conta Poupança");
+     			saldoInicial = scanConta.nextDouble();
+     			if(saldoInicial < 0.1) {
+     				System.out.println("Falha ao Criar Conta Pupança: Saldo deve ser mairo que 0.0");
+     			}
+     			else {
+     				cp.inserirConta(numeroConta, saldoInicial);
+         			System.out.println("Conta poupanca" + numeroConta + " criada com sucesso");
+     			}
      		}
      		//System.out.println("JÃ¡ existe conta com esse numero, informe outro numero");
      	}
@@ -229,7 +236,7 @@ public class InterfaceView {
 
 	            }
 	            if(menuOpcao == 4) {
-	            	opcaoDebitar(b);
+	            	opcaoDebitar(b, cb, cp);
 	            }
 	            if(menuOpcao == 5) {
 	            	opcaoTransferencia(b);
