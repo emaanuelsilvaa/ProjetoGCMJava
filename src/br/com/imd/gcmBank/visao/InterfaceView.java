@@ -13,15 +13,15 @@ import br.com.imd.gcmBank.servico.ContaBonusService;
 public class InterfaceView {
 	 public static void exibeMenu(){
 	        System.out.println("---GCM-BANK---");
-	        System.out.println("OPERAÇÔES DISPONIVEIS");
+	        System.out.println("OPERAÃ‡Ã”ES DISPONIVEIS");
 	        System.out.println("1 - Criar Conta");
 	        System.out.println("2 - Consultar Saldo");
 	        System.out.println("3 - Creditar");
 	        System.out.println("4 - Debitar");
-	        System.out.println("5 - Transferência");
+	        System.out.println("5 - TransferÃªncia");
 	        System.out.println("6 - Render Juros");
 	        System.out.println("0 - Para Sair");
-	        System.out.println("Digite o código de uma operação para prosseguir");
+	        System.out.println("Digite o cÃ³digo de uma operaÃ§Ã£o para prosseguir");
 	    }
 
 	 public static void opcaoNovaConta(BancoService b, ContaBonusService cb, ContaPoupancaService cp) {
@@ -31,7 +31,7 @@ public class InterfaceView {
 		System.out.println("Criar Conta");
      	System.out.println("Informe o tipo da conta ou 0 para voltar");
      	System.out.println("1- Conta Simples");
-      System.out.println("2- Conta Bonus");
+     	System.out.println("2- Conta Bonus");
      	System.out.println("3- Conta Poupanca");
      	Scanner scanConta = new Scanner(System.in);
      	tipoConta = scanConta.nextInt();
@@ -51,15 +51,22 @@ public class InterfaceView {
      			System.out.println("Conta bonus " + numeroConta + " criada com sucesso");
      		}
      		if(tipoConta == 3) {
-     			cp.inserirConta(numeroConta);
-     			System.out.println("Conta poupanca" + numeroConta + " criada com sucesso");
-
+     			double saldoInicial = -1;
+     			System.out.println("Informe o saldo inicial da sua Conta Poupança");
+     			saldoInicial = scanConta.nextDouble();
+     			if(saldoInicial < 0.1) {
+     				System.out.println("Falha ao Criar Conta Pupança: Saldo deve ser mairo que 0.0");
+     			}
+     			else {
+     				cp.inserirConta(numeroConta, saldoInicial);
+         			System.out.println("Conta poupanca" + numeroConta + " criada com sucesso");
+     			}
      		}
-     		//System.out.println("Já existe conta com esse numero, informe outro numero");
+     		//System.out.println("JÃ¡ existe conta com esse numero, informe outro numero");
      	}
      	else{
-     		//Adicionar as operações de construção de conta
-     		System.out.println("Já existe conta com esse numero, informe outro numero");
+     		//Adicionar as operaÃ§Ãµes de construÃ§Ã£o de conta
+     		System.out.println("JÃ¡ existe conta com esse numero, informe outro numero");
      	}
 	 }
 	 public static void opcaoSaldo(BancoService b) {
@@ -70,7 +77,7 @@ public class InterfaceView {
 	    double saldoAtual = 0;
 	    Scanner scanConta = new Scanner(System.in);
 	    numeroConta = scanConta.nextInt();
-	     	if(!b.validarNumedoDaConta(numeroConta)) { //adicionar operação de consulda de saldo
+	     	if(!b.validarNumedoDaConta(numeroConta)) { //adicionar operaÃ§Ã£o de consulda de saldo
 	     		saldoAtual = b.verificarSaldo(numeroConta);
 	     		System.out.println("Saldo atual da Conta " + numeroConta + ": R$" + saldoAtual);
 	     	}
@@ -88,32 +95,33 @@ public class InterfaceView {
 		 System.out.println("Informe o numero da conta ou 0 para voltar");
 		 Scanner scanCredito = new Scanner(System.in);
 		 numeroConta = scanCredito.nextInt();
-		 if(numeroConta > 0 && !b.validarNumedoDaConta(numeroConta)) { //Adicionar operação de conta existente
+		 if(numeroConta > 0 && !b.validarNumedoDaConta(numeroConta)) { //Adicionar operaÃ§Ã£o de conta existente
 			 System.out.println("Informe o valor a ser creditado");
 			 valorCreditado = scanCredito.nextDouble();
 			 if(valorCreditado > 0.0 && !cb.isContaBonus(numeroConta)) {
 				 b.creditar(numeroConta, valorCreditado);
-				 System.out.println("Operação realizada com Sucesso");
+				 System.out.println("OperaÃ§Ã£o realizada com Sucesso");
 				 System.out.println("Conta: " + numeroConta);
 				 System.out.println("Valor creditado: " + valorCreditado);
 				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
 			 }
 			 else {
 				 cb.creditar(numeroConta, valorCreditado);
-				 System.out.println("Operação realizada com Sucesso");
+				 System.out.println("OperaÃ§Ã£o realizada com Sucesso");
 				 System.out.println("Conta: " + numeroConta);
 				 System.out.println("Valor creditado: " + valorCreditado);
 				 System.out.println("Novo Saldo: " + cb.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto
 			 }
 		 }
 		 else {
-			 System.out.println("Operação cancelada");
+			 System.out.println("OperaÃ§Ã£o cancelada");
 			 
 			 
 		 }
 	 }
 	 
-	 public static void opcaoDebitar(BancoService b, ContaPoupancaService cp) {
+	 public static void opcaoDebitar(BancoService b, ContaBonusService cb, ContaPoupancaService cp) {
+
 		 int numeroConta = -1;
 		 double valorDebitado = 0.0;
 		 Scanner scanDebito = new Scanner(System.in);
@@ -121,24 +129,24 @@ public class InterfaceView {
 		 System.out.println("Debitar");
 		 System.out.println("Informe o numero da conta ou 0 para voltar");
 		 numeroConta = scanDebito.nextInt();
-		 if(numeroConta > 0 && !b.validarNumedoDaConta(numeroConta)) { //adicionar validação de conta existente
+		 if(numeroConta > 0 && !b.validarNumedoDaConta(numeroConta)) { //adicionar validaÃ§Ã£o de conta existente
 			 System.out.println("Informe o valor debitado ou 0 para voltar");
 			 valorDebitado = scanDebito.nextDouble();
 			 if(valorDebitado > 0.0) {
-				 if(cp.isContaPoupanca(numeroConta) && ((cp.verificarSaldo(numeroConta) - valorDebitado) < 0.0)){
-					 System.out.println("Opera��o N�O REALIZADA: Saldo Indispon�vel");
+				 if((b.verificarSaldo(numeroConta) - valorDebitado) < -1000.0) {
+					 System.out.println("Operação NÃO REALIZADA: Saldo Indisponível");
 				 }
-				 else{
-					 b.debitar(numeroConta, valorDebitado);
-					 System.out.println("Operação realizada com Sucesso");
-					 System.out.println("Conta: " + numeroConta);
-					 System.out.println("Valor debitado: " + valorDebitado);
-					 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); //Alterar para receber dados do objeto.
+				 else {
+				 b.debitar(numeroConta, valorDebitado);
+				 System.out.println("OperaÃ§Ã£o realizada com Sucesso");
+				 System.out.println("Conta: " + numeroConta);
+				 System.out.println("Valor debitado: " + valorDebitado);
+				 System.out.println("Novo Saldo: " + b.verificarSaldo(numeroConta)); 
 				 }
 			 }
 		 }
 		 else {
-			 System.out.println("Operação cancelada");
+			 System.out.println("OperaÃ§Ã£o cancelada");
 		 }
 	 }
 	 
@@ -147,20 +155,20 @@ public class InterfaceView {
 		int contaDestino = -1;
 		double valorTransferencia = 0.0;
 		System.out.println("---GCM-BANK---");
-		System.out.println("Transferência");
-		System.out.println("Informe o numero da conta de origem ou 0 para encerrar a operação");
+		System.out.println("TransferÃªncia");
+		System.out.println("Informe o numero da conta de origem ou 0 para encerrar a operaÃ§Ã£o");
 		Scanner scanTransf = new Scanner(System.in);
 		contaOrigem = scanTransf.nextInt();
-		if(contaOrigem > 0 && !b.validarNumedoDaConta(contaOrigem)) { //adicionar operaçãode validação de conta existente
-			System.out.println("Informe o numero da conta de destino ou 0 para encerrar a operação");
+		if(contaOrigem > 0 && !b.validarNumedoDaConta(contaOrigem)) { //adicionar operaÃ§Ã£ode validaÃ§Ã£o de conta existente
+			System.out.println("Informe o numero da conta de destino ou 0 para encerrar a operaÃ§Ã£o");
 			contaDestino = scanTransf.nextInt();
-			if(contaDestino > 0 && !b.validarNumedoDaConta(contaDestino)) { //adicionar validação de conta existente
+			if(contaDestino > 0 && !b.validarNumedoDaConta(contaDestino)) { //adicionar validaÃ§Ã£o de conta existente
 				System.out.println("Informe o valor a ser transferido");
 				valorTransferencia = scanTransf.nextDouble();
-				if(valorTransferencia > 0.0) {
-					if(cp.isContaPoupanca(contaOrigem) && ((cp.verificarSaldo(contaOrigem) - valorTransferencia) < 0.0)){
-						System.out.println("Opera��o N�o Realizada: Saldo indispon�vel na conta origem: " + contaOrigem);
-					}
+				if((b.verificarSaldo(contaOrigem) - valorTransferencia) < -1000.0) {
+					System.out.println("Operação Não Realizada: Saldo indisponível na conta origem: " + contaOrigem);
+				}
+				else {
 					b.transferir(contaOrigem, contaDestino, valorTransferencia);
 					System.out.println("Transferencia Realizada: ");
 					System.out.println("Conta Origem: " + contaOrigem);
@@ -172,7 +180,7 @@ public class InterfaceView {
 			}
 		}
 		else {
-			System.out.println("Operação cancelada");
+			System.out.println("OperaÃ§Ã£o cancelada");
 		}
 	 }
 	 
@@ -180,8 +188,8 @@ public class InterfaceView {
 		 int numeroConta = -1;
 		 double valorRendimento = 0;
 		System.out.println("---GCM-BANK---");
-		System.out.println("Rendimento de Juros para Poupança");
-		System.out.println("Informe o numero da conta POUPANCA ou 0 para encerrar a operação");
+		System.out.println("Rendimento de Juros para PoupanÃ§a");
+		System.out.println("Informe o numero da conta POUPANCA ou 0 para encerrar a operaÃ§Ã£o");
 		Scanner scanJuros = new Scanner(System.in);
 		numeroConta = scanJuros.nextInt();
 		if(numeroConta > 0) {
@@ -191,7 +199,7 @@ public class InterfaceView {
 				if(valorRendimento > 0.0) {
 					double saldoAnterior = cp.verificarSaldo(numeroConta);
 					double novoSaldo = cp.obterRendimentoDeJuros(numeroConta, valorRendimento);
-					System.out.println("Operação realizada com sucesso");
+					System.out.println("OperaÃ§Ã£o realizada com sucesso");
 					System.out.println("Saldo Anterior: RS " + saldoAnterior);
 					System.out.println("Novo Saldo: RS " + novoSaldo);
 				}
@@ -230,7 +238,7 @@ public class InterfaceView {
 
 	            }
 	            if(menuOpcao == 4) {
-	            	opcaoDebitar(b, cp);
+	            	opcaoDebitar(b, cb, cp);
 	            }
 	            if(menuOpcao == 5) {
 	            	opcaoTransferencia(b, cp);
