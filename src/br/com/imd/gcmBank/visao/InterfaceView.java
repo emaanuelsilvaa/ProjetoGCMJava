@@ -13,7 +13,7 @@ import br.com.imd.gcmBank.servico.ContaBonusService;
 public class InterfaceView {
 	 public static void exibeMenu(){
 	        System.out.println("---GCM-BANK---");
-	        System.out.println("OPERAÃ‡Ã”ES DISPONIVEIS");
+	        System.out.println("Opera��es DISPONIVEIS");
 	        System.out.println("1 - Criar Conta");
 	        System.out.println("2 - Consultar Saldo");
 	        System.out.println("3 - Creditar");
@@ -133,7 +133,8 @@ public class InterfaceView {
 			 System.out.println("Informe o valor debitado ou 0 para voltar");
 			 valorDebitado = scanDebito.nextDouble();
 			 if(valorDebitado > 0.0) {
-				 if((b.verificarSaldo(numeroConta) - valorDebitado) < -1000.0) {
+				 if(cp.isContaPoupanca(numeroConta) && ((cp.verificarSaldo(numeroConta) - valorDebitado) < 0.0)
+					 ||(!cp.isContaPoupanca(numeroConta) && (b.verificarSaldo(numeroConta) - valorDebitado) < -1000.0)) {
 					 System.out.println("Operação NÃO REALIZADA: Saldo Indisponível");
 				 }
 				 else {
@@ -165,7 +166,8 @@ public class InterfaceView {
 			if(contaDestino > 0 && !b.validarNumedoDaConta(contaDestino)) { //adicionar validaÃ§Ã£o de conta existente
 				System.out.println("Informe o valor a ser transferido");
 				valorTransferencia = scanTransf.nextDouble();
-				if((b.verificarSaldo(contaOrigem) - valorTransferencia) < -1000.0) {
+				if(cp.isContaPoupanca(contaOrigem) && ((cp.verificarSaldo(contaOrigem) - valorTransferencia) < 0.0)
+				 ||(!cp.isContaPoupanca(contaOrigem) && (b.verificarSaldo(contaOrigem) - valorTransferencia) < -1000.0)) {
 					System.out.println("Operação Não Realizada: Saldo indisponível na conta origem: " + contaOrigem);
 				}
 				else {
