@@ -32,6 +32,7 @@ public class ContaBonusServiceTest {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(3);
 		assertTrue(cb.isContaBonus(3));
+		
 	}
 	
 	@Test
