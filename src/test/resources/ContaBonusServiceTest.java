@@ -1,16 +1,15 @@
-package br.com.imd.gcmBank;
+package test.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.AfterClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import br.com.imd.gcmBank.dados.BancoDAO;
-import br.com.imd.gcmBank.servico.BancoService;
 import br.com.imd.gcmBank.servico.ContaBonusService;
+
+
 
 public class ContaBonusServiceTest {
 
@@ -28,7 +27,7 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void IsContaBonusSuccessTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(3);
@@ -42,16 +41,16 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	//@Disabled
 	public void VerificarSaldoTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(5);
-		//cb.creditar(5, 10);
+		cb.creditar(5, 10);
 		assertEquals(0, cb.verificarSaldo(5), 0.1);
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void CreditarSuccessTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(6);
@@ -59,14 +58,14 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void CreditarFailTest() {
 		ContaBonusService cb = new ContaBonusService();
 		assertFalse(cb.creditar(7, 50));
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void CreditarSuccessSaldoTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(8);
@@ -75,7 +74,7 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void DebitarSuccessTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(9);
@@ -84,7 +83,7 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void TransferirSuccessOrigemTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(10);
@@ -94,7 +93,7 @@ public class ContaBonusServiceTest {
 	}
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void TransferirSuccessDestinoTest() {
 		ContaBonusService cb = new ContaBonusService();
 		cb.inserirConta(12);

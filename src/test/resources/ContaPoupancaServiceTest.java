@@ -1,13 +1,14 @@
-package br.com.imd.gcmBank;
+package test.resources;
 
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import br.com.imd.gcmBank.servico.BancoService;
 import br.com.imd.gcmBank.servico.ContaPoupancaService;
@@ -29,7 +30,7 @@ public class ContaPoupancaServiceTest {
 
 	
 	@Test
-	@Ignore
+	@Disabled
 	public void VerificarSaldoSuccessTest() {
 		ContaPoupancaService cp = new ContaPoupancaService();
 		cp.inserirConta(3, 1.0);
